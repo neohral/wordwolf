@@ -3,21 +3,6 @@ const app = express();
 const server = require("http").createServer(app);
 
 const portNumber = 3000;
-/**
- * User
- */
-class User {
-  constructor(ws, id, name, room, key, custom = "") {
-    this.key = key;
-    this.ws = ws;
-    this.id = id;
-    this.name = name;
-    this.room = room;
-    this.vote = false;
-    this.isHost = false;
-    this.custom = custom;
-  }
-}
 server.listen(portNumber, () => {
   console.log("起動しました", "http://localhost:" + portNumber);
 });
@@ -26,6 +11,7 @@ app.use(express.static("./"));
 const socketio = require("socket.io");
 const io = socketio.listen(server);
 let userlist = {};
+let roomstorage = {};
 io.on("connection", (socket) => {
   //ユーザーが接続してきた時の処理
   console.log("connect to User:", socket.client.id);
@@ -208,9 +194,8 @@ let startww = (room, ownerId) => {
 let checkww = (room) => {
   let roomusers = getUserByRoom(room);
   Object.keys(roomusers).forEach((value, i) => {
-    io.to(room).emit("chatMessage", {
-      name: roomusers[value].room,
-      message: `[${roomusers[value].name}]は${roomusers[value].word}`,
+    io.to(room).emit("worldwolf_message", {
+      message: `[${roomusers[value].name}]は[${roomusers[value].word}]`,
     });
   });
 };

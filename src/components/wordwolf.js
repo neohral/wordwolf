@@ -8,16 +8,22 @@ class Form extends Component {
     this.state = {
       message: "",
       ablecheck: false,
+      logs: [],
     };
   }
   componentDidMount() {
     socket.on("wordwolf", (obj) => {
       this.state.message = obj.message;
       this.setState({ message: this.state.message });
-      console.log(obj.id, socket.id);
       if (obj.id == socket.id) {
         this.setState({ ablecheck: true });
       }
+      this.setState({ logs: [{ message: "----------------" }] });
+    });
+    socket.on("worldwolf_message", (obj) => {
+      const logs2 = this.state.logs;
+      logs2.push(obj);
+      this.setState({ logs: logs2 });
     });
   }
   wolfstart() {
@@ -34,7 +40,13 @@ class Form extends Component {
     });
   }
   render() {
-    const messages = this.state.message;
+    const theme = this.state.message;
+    const message = this.state.logs.map((e) => (
+      <div>
+        <span>{e.message}</span>
+        <p />
+      </div>
+    ));
     let result;
     if (this.state.ablecheck) {
       result = (
@@ -53,7 +65,8 @@ class Form extends Component {
           大神みおーん
         </button>
         {result}
-        <div id="log">結果:{messages}</div>
+        <div id="log">お題:{theme}</div>
+        <div>{message}</div>
       </div>
     );
   }

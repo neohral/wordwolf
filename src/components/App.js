@@ -4,6 +4,7 @@ import ChatForm from "./chatForm";
 import WordWolf from "./wordwolf";
 import socket from "./socket";
 import UserManager from "./usermanager";
+import Vote from "./vote";
 
 class App extends Component {
   constructor(props) {
@@ -12,8 +13,10 @@ class App extends Component {
       logs: [],
       name: "",
       isLoggedIn: false,
+      userlist: {},
     };
     this.bindupdate = this.update.bind(this);
+    this.binduserlist = this.updateuserlist.bind(this);
     //このcomponentで扱う配列logsの初期値を設定する
   }
   componentDidMount() {
@@ -42,6 +45,12 @@ class App extends Component {
       room: mystatus.room,
     });
   }
+  updateuserlist(obj) {
+    this.setState({
+      userlist: obj.userlist,
+    });
+    console.log(this.state.userlist);
+  }
   render() {
     const messages = this.state.logs.map((e) => (
       <div key={e.key}>
@@ -56,6 +65,7 @@ class App extends Component {
         <div>
           <WordWolf name={this.state.name} />
           <ChatForm name={this.state.name} />
+          <Vote userlist={this.state.userlist} />
           <div className="box2" id="log">
             {messages}
           </div>
@@ -68,7 +78,11 @@ class App extends Component {
     return (
       <div>
         <h1 id="title">わーどうるふ</h1>
-        <UserManager onEventLogin={this.bindupdate} name={this.state.name} />
+        <UserManager
+          onEventUserlist={this.binduserlist}
+          onEventLogin={this.bindupdate}
+          name={this.state.name}
+        />
         {logined}
       </div>
     );

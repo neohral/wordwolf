@@ -24,15 +24,28 @@ class UserManager extends Component {
     //このコンポーネントがDOMによって読み込まれた後の処理を設定する
     socket.on("addMember", (obj) => {
       this.setState({ userlist: obj.userlist });
+      this.props.onEventUserlist({
+        userlist: this.state.userlist,
+      });
     });
     socket.on("removeMember", (obj) => {
       this.setState({ userlist: obj.userlist });
+      this.props.onEventUserlist({
+        userlist: this.state.userlist,
+      });
     });
     socket.on("loginroom", (obj) => {
       this.setState({ isLoggedIn: true });
-      this.props.onEventLogin({ name: this.state.name, room: this.state.room });
+      this.props.onEventLogin({
+        name: this.state.name,
+        room: this.state.room,
+        userlist: this.state.userlist,
+      });
       this.setState({ userlist: obj.userlist });
       console.log(this.state.userlist);
+      this.props.onEventUserlist({
+        userlist: this.state.userlist,
+      });
     });
   }
   //このイベントの発生時、this.state.messageにvalueの値が入る

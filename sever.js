@@ -31,6 +31,9 @@ io.on("connection", (socket) => {
   });
   socket.on("loginroom", (msg) => {
     console.log("join to User:", msg.name, msg.room);
+    if (!roomstorage.hasOwnProperty(msg.room)) {
+      roomstorage[msg.room] = { isVoting: false };
+    }
     socket.join(msg.room);
     userlist[socket.client.id] = {
       id: socket.client.id,
@@ -64,6 +67,13 @@ io.on("connection", (socket) => {
       name: logoutuser.room,
       message: `[${logoutuser.name}]がログアウトしました。`,
     });
+    if (Object.values(getUserByRoom(logoutuser.room)).length == 0) {
+      delete roomstorage[logoutuser.room];
+    } else {
+      if (roomstorage[logoutuser.room].isVoting) {
+        voteCheck(logoutuser.room);
+      }
+    }
   });
 });
 let getUserByRoom = (room) => {
@@ -208,3 +218,74 @@ let arrayShuffle = (array) => {
   }
   return array;
 };
+
+/**
+ * Vote
+ */
+io.on("connection", (socket) => {
+  socket.on("voteReq", (obj) => {
+    voteStart(userlist[socket.client.id].room);
+  });
+  socket.on("voteDone", (obj) => {
+    userlist[socket.client.id].vote = true;
+    userlist[socket.client.id].votestatus = obj.votestatus;
+    let room = userlist[socket.client.id].room;
+    if (voteCheck(room)) {
+      voteEnd(room);
+    } else {
+      roomstorage.timer = setTimeout(() => {
+        clearTimeout(roomstorage.timer);
+        voteEnd(room);
+      }, 60000);
+    }
+  });
+  socket.on("loginroom", (msg) => {
+    if (roomstorage[msg.room].isVoting) {
+      userlist[socket.client.id].vote = false;
+      userlist[socket.client.id].votestatus = "";
+      io.to(socket.client.id).emit("vote");
+    }
+  });
+});
+function voteStart(room) {
+  let roomusers = getUserByRoom(room);
+  if (roomstorage[room].isVoting == undefined) {
+    roomstorage[room].isVoting = false;
+  }
+  if (!roomstorage[room].isVoting) {
+    let data = {
+      sender: "server",
+      title: "voteStart",
+    };
+    Object.values(roomusers).forEach(function (user, i) {
+      user.vote = false;
+      user.votestatus = "";
+    });
+    roomstorage[room].isVoting = true;
+    io.to(room).emit("vote", data);
+  }
+}
+function voteCheck(room) {
+  let roomusers = getUserByRoom(room);
+  let endVote = true;
+  Object.values(roomusers).forEach(function (con, i) {
+    console.log(`[log]CHECK:${con.id}:${con.vote}`);
+    if (!con.vote) {
+      endVote = false;
+    }
+  });
+  return endVote;
+}
+function voteEnd(room) {
+  if (roomstorage[room].isVoting) {
+    clearTimeout(roomstorage[room].timer);
+    let voteresult = {};
+    Object.values(getUserByRoom(room)).forEach((con, i) => {
+      voteresult[con.id] = {};
+      voteresult[con.id].vote = con.vote;
+      voteresult[con.id].votestatus = con.votestatus;
+    });
+    roomstorage[room].isVoting = false;
+    io.to(room).emit("voteEnd", voteresult);
+  }
+}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
 import socket from "./socket";
+import Timer from "./timer";
 
 class WordWolf extends Component {
   constructor(props) {
@@ -32,12 +33,12 @@ class WordWolf extends Component {
       message: this.state.message,
     });
   }
-  wolfcheck() {
+  wolfanser() {
     this.setState({ ablecheck: false });
-    socket.emit("wordwolf_check", {
-      name: this.state.name,
-      message: this.state.message,
-    });
+    socket.emit("wordwolf_anser");
+  }
+  timerend() {
+    socket.emit("voteReq");
   }
   render() {
     const theme = this.state.message;
@@ -51,7 +52,7 @@ class WordWolf extends Component {
     if (this.state.ablecheck) {
       result = (
         <div>
-          <button className="send" onClick={(e) => this.wolfcheck()}>
+          <button className="send" onClick={(e) => this.wolfanser()}>
             結果
           </button>
         </div>
@@ -67,6 +68,7 @@ class WordWolf extends Component {
         {result}
         <div id="log">お題:{theme}</div>
         <div>{message}</div>
+        <Timer onEventTimerCount={this.timerend} />
       </div>
     );
   }

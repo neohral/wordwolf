@@ -29,6 +29,9 @@ io.on("connection", (socket) => {
   socket.on("wordwolf_check", (msg) => {
     checkww(userlist[socket.client.id].room);
   });
+  socket.on("wordwolf_anser", (msg) => {
+    anserww(userlist[socket.client.id].room);
+  });
   socket.on("loginroom", (msg) => {
     console.log("join to User:", msg.name, msg.room);
     if (!roomstorage.hasOwnProperty(msg.room)) {
@@ -201,12 +204,21 @@ let startww = (room, ownerId) => {
     roomusers[value].word = pwordlist[i].word;
     roomusers[value].iswolf = pwordlist[i].iswolf;
   });
+  io.to(room).emit("starttimer", { sec: 10 });
 };
 let checkww = (room) => {
   let roomusers = getUserByRoom(room);
   Object.keys(roomusers).forEach((value, i) => {
     io.to(room).emit("worldwolf_message", {
       message: `[${roomusers[value].name}]は[${roomusers[value].iswolf}]`,
+    });
+  });
+};
+let anserww = (room) => {
+  let roomusers = getUserByRoom(room);
+  Object.keys(roomusers).forEach((value, i) => {
+    io.to(room).emit("worldwolf_message", {
+      message: `[${roomusers[value].name}]は[${roomusers[value].word}]`,
     });
   });
 };
@@ -234,7 +246,7 @@ io.on("connection", (socket) => {
     if (voteCheck(room)) {
       voteEnd(room);
     } else {
-      roomstorage.timer = setTimeout(() => {
+      roomstorage.timeout = setTimeout(() => {
         clearTimeout(roomstorage.timer);
         voteEnd(room);
       }, 60000);
@@ -279,14 +291,18 @@ function voteCheck(room) {
 }
 function voteEnd(room) {
   if (roomstorage[room].isVoting) {
+    clearTimeout(roomstorage[room].timeout);
     clearTimeout(roomstorage[room].timer);
     let voteresult = {};
     Object.values(getUserByRoom(room)).forEach((con, i) => {
       voteresult[con.id] = {};
+      voteresult[con.id].id = con.id;
+      voteresult[con.id].name = con.name;
       voteresult[con.id].vote = con.vote;
       voteresult[con.id].votestatus = con.votestatus;
     });
     roomstorage[room].isVoting = false;
     io.to(room).emit("voteEnd", voteresult);
+    checkww(room);
   }
 }

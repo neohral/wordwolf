@@ -19,6 +19,7 @@ class Timer extends Component {
   }
 
   starttimer(second) {
+    console.log("starttimer");
     this.setState({ isTimer: true, sec: second });
     clearInterval(this.state.timerobj);
     this.state.timerobj = setInterval(() => {
@@ -41,14 +42,7 @@ class Timer extends Component {
     } else {
       time = "";
     }
-    return (
-      <div className="box2" id="Form">
-        {time}
-        <button className="send" onClick={(e) => this.starttimer(5 * 60)}>
-          開始
-        </button>
-      </div>
-    );
+    return <div>{time}</div>;
   }
 }
 

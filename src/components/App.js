@@ -5,7 +5,6 @@ import WordWolf from "./wordwolf";
 import socket from "./socket";
 import UserManager from "./usermanager";
 import Vote from "./vote";
-import Timer from "./timer";
 
 class App extends Component {
   constructor(props) {
@@ -65,9 +64,8 @@ class App extends Component {
       logined = (
         <div>
           <WordWolf name={this.state.name} />
-          <ChatForm name={this.state.name} />
           <Vote userlist={this.state.userlist} />
-          <Timer />
+          <ChatForm name={this.state.name} />
           <div className="box2" id="log">
             {messages}
           </div>

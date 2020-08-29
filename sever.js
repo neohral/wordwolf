@@ -188,9 +188,9 @@ let startww = (room, ownerId) => {
     minorityword = wordlist[random].word;
   }
   for (let i = 0; i < Object.keys(roomusers).length - 1; i++) {
-    pwordlist.push(majorityword);
+    pwordlist.push({ word: majorityword, iswolf: "多数派" });
   }
-  pwordlist.push(minorityword);
+  pwordlist.push({ word: minorityword, iswolf: "少数派" });
   pwordlist = arrayShuffle(pwordlist);
   Object.keys(roomusers).forEach((value, i) => {
     io.to(value).emit("wordwolf", {
@@ -198,14 +198,15 @@ let startww = (room, ownerId) => {
       message: pwordlist[i],
       id: ownerId,
     });
-    roomusers[value].word = pwordlist[i];
+    roomusers[value].word = pwordlist[i].word;
+    roomusers[value].iswolf = pwordlist[i].iswolf;
   });
 };
 let checkww = (room) => {
   let roomusers = getUserByRoom(room);
   Object.keys(roomusers).forEach((value, i) => {
     io.to(room).emit("worldwolf_message", {
-      message: `[${roomusers[value].name}]は[${roomusers[value].word}]`,
+      message: `[${roomusers[value].name}]は[${roomusers[value].iswolf}]`,
     });
   });
 };

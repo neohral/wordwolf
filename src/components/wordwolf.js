@@ -13,7 +13,7 @@ class Form extends Component {
   }
   componentDidMount() {
     socket.on("wordwolf", (obj) => {
-      this.state.message = obj.message;
+      this.state.message = obj.message.word;
       this.setState({ message: this.state.message });
       if (obj.id == socket.id) {
         this.setState({ ablecheck: true });

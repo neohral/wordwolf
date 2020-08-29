@@ -67,9 +67,9 @@ class Form extends Component {
     return (
       <div className="box2" id="Form">
         <button className="send" onClick={(e) => this.votestart(e)}>
-          おーーｎ
+          投票開始
         </button>
-        <div id="log">お題:{theme}</div>
+        <div id="log">{theme}</div>
         {votetag}
       </div>
     );

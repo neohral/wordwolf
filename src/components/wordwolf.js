@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import io from "socket.io-client";
 import socket from "./socket";
 
-class Form extends Component {
+class WordWolf extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,4 +71,4 @@ class Form extends Component {
     );
   }
 }
-export default Form;
+export default WordWolf;

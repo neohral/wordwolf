@@ -10,17 +10,14 @@ class Form extends Component {
       message: "",
       inputRoom: "",
       room: "",
-      //このcomponentで扱うnameとmessageの初期値を設定する。
     };
   }
   roomChanged(e) {
     this.setState({ inputRoom: e.target.value });
   }
-  //このイベントの発生時、this.state.nameにvalueの値が入る
   messageChanged(e) {
     this.setState({ message: e.target.value });
   }
-  //このイベントの発生時、this.state.messageにvalueの値が入る
   send() {
     socket.emit("chatMessage", {
       name: this.props.name,
@@ -31,8 +28,6 @@ class Form extends Component {
   sendroom() {
     this.setState({ room: this.state.inputRoom });
   }
-  //このイベント発生時、socket.io-clientがlocahostにnameとmessageの値が入ったchatMessageを全てのユーザーに送信する。
-  //その後、messageの値だけを初期値に戻す。
 
   render() {
     return (
@@ -45,7 +40,7 @@ class Form extends Component {
             onChange={(e) => this.messageChanged(e)}
           />
         </div>
-        <button className="send" onClick={(e) => this.send()}>
+        <button className="btn" onClick={(e) => this.send()}>
           送信
         </button>
       </div>

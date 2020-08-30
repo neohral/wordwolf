@@ -16,22 +16,28 @@ class Timer extends Component {
     socket.on("starttimer", (obj) => {
       this.starttimer(obj.sec);
     });
+    socket.on("endtimer", (obj) => {
+      if (this.state.isTimer) {
+        this.endtimer();
+      }
+    });
   }
 
   starttimer(second) {
-    console.log("starttimer");
     this.setState({ isTimer: true, sec: second });
     clearInterval(this.state.timerobj);
     this.state.timerobj = setInterval(() => {
       this.setState({ sec: this.state.sec - 1 });
-      if (this.state.sec == 0) {
-        clearInterval(this.state.timerobj);
-        this.setState({ isTimer: false });
-        this.props.onEventTimerCount();
+      if (this.state.sec <= 0) {
+        this.endtimer();
       }
     }, 1000);
   }
-
+  endtimer() {
+    clearInterval(this.state.timerobj);
+    this.setState({ isTimer: false });
+    this.props.onEventTimerCount();
+  }
   render() {
     const hour = ("00" + Math.floor(this.state.sec / 3600)).slice(-2);
     const minute = ("00" + (Math.floor(this.state.sec / 60) % 60)).slice(-2);

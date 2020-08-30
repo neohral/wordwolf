@@ -11,7 +11,6 @@ class UserManager extends Component {
       isLoggedIn: false,
       room: "",
       userlist: {},
-      //このcomponentで扱うnameとmessageの初期値を設定する。
     };
   }
   roomChanged(e) {
@@ -21,7 +20,6 @@ class UserManager extends Component {
     this.setState({ name: e.target.value });
   }
   componentDidMount() {
-    //このコンポーネントがDOMによって読み込まれた後の処理を設定する
     socket.on("addMember", (obj) => {
       this.setState({ userlist: obj.userlist });
       this.props.onEventUserlist({
@@ -42,13 +40,11 @@ class UserManager extends Component {
         userlist: this.state.userlist,
       });
       this.setState({ userlist: obj.userlist });
-      console.log(this.state.userlist);
       this.props.onEventUserlist({
         userlist: this.state.userlist,
       });
     });
   }
-  //このイベントの発生時、this.state.messageにvalueの値が入る
   loginroom() {
     let re = /^( |　)*$/g;
     if (this.state.name != "" && !re.test(this.state.name)) {
@@ -63,11 +59,8 @@ class UserManager extends Component {
       alert("名前は必須");
     }
   }
-  //このイベント発生時、socket.io-clientがlocahostにnameとmessageの値が入ったchatMessageを全てのユーザーに送信する。
-  //その後、messageの値だけを初期値に戻す。
 
   render() {
-    const messages = this.state.message;
     const users = Object.values(this.state.userlist).map((e) => (
       <li>{e.name}</li>
     ));

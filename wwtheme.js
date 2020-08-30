@@ -20,6 +20,11 @@ let getWord = () => {
   let themeTagrnd = Math.floor(Math.random() * themeTags.length);
   let themeTag = wordlist[random].tag[themeTagrnd];
   let themelist = arrayShuffle(getThemeByTag(themeTag));
+  //タグにあるワードが少ないときの警告
+  if (themelist.length <= 2) {
+    console.log(`[Warning]ThemeTag needs more word(${themeTag}) `);
+    themelist.push(wordlist[random + 1].word);
+  }
   let result = {
     majorityword: themelist[0],
     minorityword: themelist[1],
@@ -146,5 +151,85 @@ wordlist.push(new WordWolf("ケーキ", ["お菓子"]));
 wordlist.push(new WordWolf("クッキー", ["お菓子"]));
 wordlist.push(new WordWolf("パイ", ["お菓子"]));
 
+wordlist.push(new WordWolf("スクワット", ["筋トレ"]));
+wordlist.push(new WordWolf("プランク", ["筋トレ"]));
+wordlist.push(new WordWolf("腹筋", ["筋トレ"]));
+wordlist.push(new WordWolf("懸垂", ["筋トレ"]));
+wordlist.push(new WordWolf("ダンベル上げ", ["筋トレ"]));
+wordlist.push(new WordWolf("腕立て伏せ", ["筋トレ"]));
+wordlist.push(new WordWolf("ランニング", ["筋トレ", "スポーツ"]));
+
+wordlist.push(new WordWolf("ApexLegends", ["ゲーム", "FPS", "バトロワ"]));
+wordlist.push(new WordWolf("Rainbow six siege", ["ゲーム", "FPS"]));
+wordlist.push(new WordWolf("カウンターストライク", ["ゲーム", "FPS"]));
+wordlist.push(new WordWolf("バトルフィールド", ["ゲーム", "FPS"]));
+wordlist.push(new WordWolf("オーバーウォッチ", ["ゲーム", "FPS"]));
+wordlist.push(new WordWolf("Call of Duty", ["ゲーム", "FPS"]));
+wordlist.push(new WordWolf("フォートナイト", ["ゲーム", "FPS"]));
+
+wordlist.push(new WordWolf("刀剣乱舞", ["ゲーム", "ソシャゲ"]));
+wordlist.push(new WordWolf("艦コレ", ["ゲーム", "ソシャゲ"]));
+wordlist.push(new WordWolf("グラブル", ["ゲーム", "ソシャゲ", "サイゲームス"]));
+wordlist.push(new WordWolf("FGO", ["ゲーム", "ソシャゲ"]));
+wordlist.push(new WordWolf("パズドラ", ["ゲーム", "ソシャゲ"]));
+wordlist.push(
+  new WordWolf("ツイステットワンダーランド", [
+    "ゲーム",
+    "ソシャゲ",
+    "ディズニー",
+  ])
+);
+wordlist.push(new WordWolf("ツムツム", ["ゲーム", "ソシャゲ", "ディズニー"]));
+
+wordlist.push(new WordWolf("美女と野獣", ["ディズニー"]));
+wordlist.push(new WordWolf("シンデレラ", ["ディズニー"]));
+wordlist.push(new WordWolf("アラジン", ["ディズニー"]));
+
+wordlist.push(
+  new WordWolf("シャドウバース", ["ゲーム", "ソシャゲ", "サイゲームス"])
+);
+wordlist.push(
+  new WordWolf("神撃のバハムート", ["ゲーム", "ソシャゲ", "サイゲームス"])
+);
+wordlist.push(
+  new WordWolf("ワールドフリッパー", ["ゲーム", "ソシャゲ", "サイゲームス"])
+);
+wordlist.push(
+  new WordWolf("プリンセスコネクト", ["ゲーム", "ソシャゲ", "サイゲームス"])
+);
+wordlist.push(new WordWolf("ツムツム", ["ゲーム", "ソシャゲ", "ディズニー"]));
+wordlist.push(
+  new WordWolf("ドラゴンクエストシリーズ", ["ゲーム", "スクエアエニックス"])
+);
+wordlist.push(
+  new WordWolf("ファイナルファンタジーシリーズ", [
+    "ゲーム",
+    "スクエアエニックス",
+  ])
+);
+wordlist.push(new WordWolf("烏龍茶", ["飲み物", "お茶"]));
+wordlist.push(new WordWolf("緑茶", ["飲み物", "お茶"]));
+wordlist.push(new WordWolf("ほうじ茶", ["飲み物", "お茶"]));
+wordlist.push(new WordWolf("紅茶", ["飲み物", "お茶"]));
+wordlist.push(new WordWolf("麦茶", ["飲み物", "お茶"]));
+wordlist.push(new WordWolf("ジャスミン茶", ["飲み物", "お茶"]));
+
+wordlist.push(new WordWolf("水瀬いのり", ["女性声優", "歌手"]));
+wordlist.push(new WordWolf("佐倉綾音", ["女性声優", "歌手"]));
+wordlist.push(new WordWolf("花澤香菜", ["女性声優", "歌手"]));
+wordlist.push(new WordWolf("小倉唯", ["女性声優", "歌手"]));
+
+wordlist.push(new WordWolf("花江夏樹", ["男性声優", "声優", "YouTuber"]));
+wordlist.push(new WordWolf("杉田智一", ["男性声優", "声優"]));
+wordlist.push(new WordWolf("木村昴", ["男性声優", "声優"]));
+
+wordlist.push(new WordWolf("ヒカキン", ["YouTuber"]));
+wordlist.push(new WordWolf("はじめしゃっちょー", ["YouTuber"]));
+
+wordlist.push(new WordWolf("Twitter", ["SNS"]));
+wordlist.push(new WordWolf("LINE", ["SNS"]));
+wordlist.push(new WordWolf("FaceBook", ["SNS"]));
+wordlist.push(new WordWolf("Instagram", ["SNS"]));
+wordlist.push(new WordWolf("mixi", ["SNS"]));
 module.exports.wordlist = wordlist;
 module.exports.getWord = getWord;

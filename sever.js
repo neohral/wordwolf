@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-var ww = require("./wordwolf.js");
+var ww = require("./wwtheme.js");
 
 const portNumber = 3000;
 server.listen(portNumber, () => {
@@ -21,6 +21,9 @@ io.on("connection", (socket) => {
     name: `noname`,
     room: socket.client.id,
   };
+  socket.on("endtimer", (msg) => {
+    io.to(userlist[socket.client.id].room).emit("endtimer");
+  });
   socket.on("chatMessage", (msg) => {
     io.to(userlist[socket.client.id].room).emit("chatMessage", msg);
   });
@@ -82,7 +85,7 @@ let getUserByRoom = (room) => {
 };
 io.on("connection", (socket) => {
   socket.on("wordwolf_start", (msg) => {
-    startww(userlist[socket.client.id].room, socket.client.id);
+    startww(userlist[socket.client.id].room, socket.client.id, msg.sec);
   });
   socket.on("wordwolf_check", (msg) => {
     checkww(userlist[socket.client.id].room);
@@ -91,16 +94,16 @@ io.on("connection", (socket) => {
     anserww(userlist[socket.client.id].room);
   });
 });
-let startww = (room, ownerId) => {
+let startww = (room, ownerId, sec) => {
   let roomusers = getUserByRoom(room);
   let pwordlist = [];
   let theme = ww.getWord();
   let majorityword = theme.majorityword;
   let minorityword = theme.minorityword;
   for (let i = 0; i < Object.keys(roomusers).length - 1; i++) {
-    pwordlist.push({ word: majorityword, iswolf: "多数派" });
+    pwordlist.push({ word: majorityword, iswolf: "市民" });
   }
-  pwordlist.push({ word: minorityword, iswolf: "少数派" });
+  pwordlist.push({ word: minorityword, iswolf: "ウルフ" });
   pwordlist = arrayShuffle(pwordlist);
   Object.keys(roomusers).forEach((value, i) => {
     io.to(value).emit("wordwolf", {
@@ -111,22 +114,30 @@ let startww = (room, ownerId) => {
     roomusers[value].word = pwordlist[i].word;
     roomusers[value].iswolf = pwordlist[i].iswolf;
   });
-  io.to(room).emit("starttimer", { sec: 5 * 60 });
+  io.to(room).emit("starttimer", { sec: sec });
 };
 let checkww = (room) => {
   let roomusers = getUserByRoom(room);
   Object.keys(roomusers).forEach((value, i) => {
-    io.to(room).emit("worldwolf_message", {
-      message: `[${roomusers[value].name}]は[${roomusers[value].iswolf}]`,
-    });
+    let result = {
+      id: roomusers[value].id,
+      name: roomusers[value].name,
+      iswolf: roomusers[value].iswolf,
+    };
+    io.to(room).emit("worldwolf_message", result);
   });
 };
 let anserww = (room) => {
   let roomusers = getUserByRoom(room);
+  voteEnd(room);
   Object.keys(roomusers).forEach((value, i) => {
-    io.to(room).emit("worldwolf_message", {
-      message: `[${roomusers[value].name}]は[${roomusers[value].word}]`,
-    });
+    let result = {
+      id: roomusers[value].id,
+      name: roomusers[value].name,
+      iswolf: roomusers[value].iswolf,
+      word: roomusers[value].word,
+    };
+    io.to(room).emit("worldwolf_message", result);
   });
 };
 let arrayShuffle = (array) => {
@@ -142,13 +153,15 @@ let arrayShuffle = (array) => {
 /**
  * Vote
  */
+const votetimeout = 60000;
 io.on("connection", (socket) => {
   socket.on("voteReq", (obj) => {
     voteStart(userlist[socket.client.id].room);
   });
   socket.on("voteDone", (obj) => {
     userlist[socket.client.id].vote = true;
-    userlist[socket.client.id].votestatus = obj.votestatus;
+    userlist[socket.client.id].votestatus = userlist[obj.votestatus].name;
+    userlist[obj.votestatus].votes++;
     let room = userlist[socket.client.id].room;
     if (voteCheck(room)) {
       voteEnd(room);
@@ -156,13 +169,14 @@ io.on("connection", (socket) => {
       roomstorage.timeout = setTimeout(() => {
         clearTimeout(roomstorage.timer);
         voteEnd(room);
-      }, 60000);
+      }, votetimeout);
     }
   });
   socket.on("loginroom", (msg) => {
     if (roomstorage[msg.room].isVoting) {
       userlist[socket.client.id].vote = false;
       userlist[socket.client.id].votestatus = "";
+      userlist[socket.client.id].votes = 0;
       io.to(socket.client.id).emit("vote");
     }
   });
@@ -180,6 +194,7 @@ function voteStart(room) {
     Object.values(roomusers).forEach(function (user, i) {
       user.vote = false;
       user.votestatus = "";
+      user.votes = 0;
     });
     roomstorage[room].isVoting = true;
     io.to(room).emit("vote", data);
@@ -197,9 +212,12 @@ function voteCheck(room) {
   return endVote;
 }
 function voteEnd(room) {
+  if (!roomstorage.hasOwnProperty(room)) {
+    return;
+  }
+  clearTimeout(roomstorage[room].timeout);
+  clearTimeout(roomstorage[room].timer);
   if (roomstorage[room].isVoting) {
-    clearTimeout(roomstorage[room].timeout);
-    clearTimeout(roomstorage[room].timer);
     let voteresult = {};
     Object.values(getUserByRoom(room)).forEach((con, i) => {
       voteresult[con.id] = {};
@@ -207,6 +225,7 @@ function voteEnd(room) {
       voteresult[con.id].name = con.name;
       voteresult[con.id].vote = con.vote;
       voteresult[con.id].votestatus = con.votestatus;
+      voteresult[con.id].votes = con.votes;
     });
     roomstorage[room].isVoting = false;
     io.to(room).emit("voteEnd", voteresult);

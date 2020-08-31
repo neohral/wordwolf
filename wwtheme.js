@@ -163,7 +163,7 @@ wordlist.push(new WordWolf("ダンベル上げ", ["筋トレ"]));
 wordlist.push(new WordWolf("腕立て伏せ", ["筋トレ"]));
 wordlist.push(new WordWolf("ランニング", ["筋トレ", "スポーツ"]));
 
-wordlist.push(new WordWolf("ApexLegends", ["FPS", "バトロワ"]));
+wordlist.push(new WordWolf("ApexLegends", ["FPS"]));
 wordlist.push(new WordWolf("Rainbow six siege", ["FPS"]));
 wordlist.push(new WordWolf("カウンターストライク", ["FPS"]));
 wordlist.push(new WordWolf("バトルフィールド", ["FPS"]));
@@ -172,9 +172,11 @@ wordlist.push(new WordWolf("Call of Duty", ["FPS"]));
 wordlist.push(new WordWolf("フォートナイト", ["FPS"]));
 
 wordlist.push(new WordWolf("刀剣乱舞", ["ソシャゲ"]));
-wordlist.push(new WordWolf("艦コレ", ["ソシャゲ"]));
-wordlist.push(new WordWolf("グラブル", ["ソシャゲ", "サイゲームス"]));
-wordlist.push(new WordWolf("FGO", ["ソシャゲ"]));
+wordlist.push(new WordWolf("艦隊これくしょん", ["ソシャゲ"]));
+wordlist.push(
+  new WordWolf("グランブルーファンタジー", ["ソシャゲ", "サイゲームス"])
+);
+wordlist.push(new WordWolf("Fate/Grand Order", ["ソシャゲ"]));
 wordlist.push(new WordWolf("パズドラ", ["ソシャゲ"]));
 wordlist.push(
   new WordWolf("ツイステットワンダーランド", [

@@ -15,6 +15,7 @@ class WordWolf extends Component {
       sec: 60 * 5,
       isGaming: false,
     };
+    this.bindtimerend = this.timerend.bind(this);
   }
   componentDidMount() {
     socket.on("wordwolf", (obj) => {
@@ -52,10 +53,6 @@ class WordWolf extends Component {
     socket.on("endtimer", (obj) => {
       this.setState({ isTimer: false });
     });
-    socket.on("logingaming", (obj) => {
-      console.log(obj.isGaming);
-      this.setState({ isGaming: obj.isGaming });
-    });
   }
   wolfstart() {
     socket.emit("wordwolf_start", {
@@ -67,9 +64,12 @@ class WordWolf extends Component {
   wolfanswer() {
     this.setState({ isOwner: false });
     socket.emit("wordwolf_anser");
+    socket.emit("endtimer");
   }
   timerend() {
-    socket.emit("voteReq");
+    if (this.state.isGaming) {
+      socket.emit("voteReq");
+    }
   }
   clickTimerend() {
     socket.emit("endtimer");
@@ -96,7 +96,7 @@ class WordWolf extends Component {
     if (this.state.isOwner) {
       result = (
         <button className="btn" onClick={(e) => this.wolfanswer()}>
-          結果
+          答え
         </button>
       );
     } else {
@@ -144,7 +144,7 @@ class WordWolf extends Component {
         <div className="box2">
           <div id="log">お題:{theme}</div>
           <div>{message}</div>
-          <Timer onEventTimerCount={this.timerend} />
+          <Timer onEventTimerCount={this.bindtimerend} />
         </div>
       </div>
     );

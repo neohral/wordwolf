@@ -44,6 +44,9 @@ class UserManager extends Component {
         userlist: this.state.userlist,
       });
     });
+    socket.on("reject", (obj) => {
+      alert(`[${obj.room}]はゲーム中のため参加できないです。`);
+    });
   }
   loginroom() {
     let re = /^( |　)*$/g;

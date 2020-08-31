@@ -28,9 +28,13 @@ io.on("connection", (socket) => {
     io.to(userlist[socket.client.id].room).emit("chatMessage", msg);
   });
   socket.on("loginroom", (msg) => {
-    console.log("join to User:", msg.name, msg.room);
     if (!roomstorage.hasOwnProperty(msg.room)) {
       roomstorage[msg.room] = { isVoting: false, isGaming: false };
+    }
+    //リジェクト
+    if (roomstorage[msg.room].isGaming) {
+      io.to(socket.client.id).emit("reject", { room: msg.room });
+      return;
     }
     socket.join(msg.room);
     userlist[socket.client.id] = {
@@ -50,9 +54,7 @@ io.on("connection", (socket) => {
       name: loginuser.room,
       message: `[${loginuser.name}]がログインしました。`,
     });
-    io.to(socket.client.id).emit("logingaming", {
-      isGaming: roomstorage[msg.room].isGaming,
-    });
+    console.log("join to User:", msg.name, msg.room);
   });
   socket.on("disconnect", (msg) => {
     console.log("disconnect to User:", socket.client.id);
@@ -143,7 +145,11 @@ let anserww = (room) => {
     };
     io.to(room).emit("worldwolf_message", result);
   });
+  roomstorage[room].isGaming = false;
 };
+/**
+ * commons
+ */
 let arrayShuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     var r = Math.floor(Math.random() * (i + 1));

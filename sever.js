@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
   socket.on("loginroom", (msg) => {
     console.log("join to User:", msg.name, msg.room);
     if (!roomstorage.hasOwnProperty(msg.room)) {
-      roomstorage[msg.room] = { isVoting: false };
+      roomstorage[msg.room] = { isVoting: false, isGaming: false };
     }
     socket.join(msg.room);
     userlist[socket.client.id] = {
@@ -49,6 +49,9 @@ io.on("connection", (socket) => {
     io.to(userlist[socket.client.id].room).emit("chatMessage", {
       name: loginuser.room,
       message: `[${loginuser.name}]がログインしました。`,
+    });
+    io.to(socket.client.id).emit("logingaming", {
+      isGaming: roomstorage[msg.room].isGaming,
     });
   });
   socket.on("disconnect", (msg) => {
@@ -100,6 +103,7 @@ let startww = (room, ownerId, sec) => {
   let theme = ww.getWord();
   let majorityword = theme.majorityword;
   let minorityword = theme.minorityword;
+  roomstorage[room].isGaming = true;
   for (let i = 0; i < Object.keys(roomusers).length - 1; i++) {
     pwordlist.push({ word: majorityword, iswolf: "市民" });
   }

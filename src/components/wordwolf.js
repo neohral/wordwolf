@@ -13,6 +13,7 @@ class WordWolf extends Component {
       wolfstat: {},
       isTimer: false,
       sec: 60 * 5,
+      isGaming: false,
     };
   }
   componentDidMount() {
@@ -23,7 +24,10 @@ class WordWolf extends Component {
       if (obj.id == socket.id) {
         this.setState({ isOwner: true });
       }
-      this.setState({ logs: [{ message: "----------------" }] });
+      this.setState({
+        logs: [{ message: "----------------" }],
+        isGaming: true,
+      });
     });
     socket.on("worldwolf_message", (obj) => {
       if (!this.state.wolfstat.hasOwnProperty(obj.id)) {
@@ -35,6 +39,7 @@ class WordWolf extends Component {
       }
       if (obj.hasOwnProperty("word")) {
         this.state.wolfstat[obj.id].word = obj.word;
+        this.setState({ isGaming: false });
       }
       this.setState({ wolfstat: this.state.wolfstat });
       const logs2 = this.state.logs;
@@ -46,6 +51,10 @@ class WordWolf extends Component {
     });
     socket.on("endtimer", (obj) => {
       this.setState({ isTimer: false });
+    });
+    socket.on("logingaming", (obj) => {
+      console.log(obj.isGaming);
+      this.setState({ isGaming: obj.isGaming });
     });
   }
   wolfstart() {
@@ -103,6 +112,16 @@ class WordWolf extends Component {
     } else {
       stoptimer = "";
     }
+    let startbtn;
+    if (!this.state.isGaming) {
+      startbtn = (
+        <button className="btn" onClick={(e) => this.wolfstart()}>
+          大神みおーん
+        </button>
+      );
+    } else {
+      startbtn = "";
+    }
     return (
       <div id="Form">
         <div className="box2">
@@ -118,9 +137,7 @@ class WordWolf extends Component {
           />
           秒
           <br />
-          <button className="btn" onClick={(e) => this.wolfstart()}>
-            大神みおーん
-          </button>
+          {startbtn}
           {stoptimer}
           {result}
         </div>

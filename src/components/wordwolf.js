@@ -64,12 +64,13 @@ class WordWolf extends Component {
   wolfanswer() {
     this.setState({ isOwner: false });
     socket.emit("wordwolf_anser");
-    socket.emit("endtimer");
+    this.clickTimerend();
   }
   timerend() {
     if (this.state.isGaming) {
       socket.emit("voteReq");
     }
+    this.clickTimerend();
   }
   clickTimerend() {
     socket.emit("endtimer");

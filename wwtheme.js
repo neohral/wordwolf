@@ -100,6 +100,10 @@ wordlist.push(new WordWolf("努力家", ["性格"]));
 wordlist.push(new WordWolf("ネガティブ", ["性格"]));
 wordlist.push(new WordWolf("マイペース", ["性格"]));
 wordlist.push(new WordWolf("アクティブ", ["性格"]));
+wordlist.push(new WordWolf("ドS", ["性格"]));
+wordlist.push(new WordWolf("ヤンデレ", ["性格"]));
+wordlist.push(new WordWolf("ツンデレ", ["性格"]));
+wordlist.push(new WordWolf("クーデレ", ["性格"]));
 
 wordlist.push(new WordWolf("コンビニ", ["街にある"]));
 wordlist.push(new WordWolf("スーパー", ["街にある"]));
@@ -159,19 +163,19 @@ wordlist.push(new WordWolf("ダンベル上げ", ["筋トレ"]));
 wordlist.push(new WordWolf("腕立て伏せ", ["筋トレ"]));
 wordlist.push(new WordWolf("ランニング", ["筋トレ", "スポーツ"]));
 
-wordlist.push(new WordWolf("ApexLegends", ["ゲーム", "FPS", "バトロワ"]));
-wordlist.push(new WordWolf("Rainbow six siege", ["ゲーム", "FPS"]));
-wordlist.push(new WordWolf("カウンターストライク", ["ゲーム", "FPS"]));
-wordlist.push(new WordWolf("バトルフィールド", ["ゲーム", "FPS"]));
-wordlist.push(new WordWolf("オーバーウォッチ", ["ゲーム", "FPS"]));
-wordlist.push(new WordWolf("Call of Duty", ["ゲーム", "FPS"]));
-wordlist.push(new WordWolf("フォートナイト", ["ゲーム", "FPS"]));
+wordlist.push(new WordWolf("ApexLegends", ["FPS", "バトロワ"]));
+wordlist.push(new WordWolf("Rainbow six siege", ["FPS"]));
+wordlist.push(new WordWolf("カウンターストライク", ["FPS"]));
+wordlist.push(new WordWolf("バトルフィールド", ["FPS"]));
+wordlist.push(new WordWolf("オーバーウォッチ", ["FPS"]));
+wordlist.push(new WordWolf("Call of Duty", ["FPS"]));
+wordlist.push(new WordWolf("フォートナイト", ["FPS"]));
 
-wordlist.push(new WordWolf("刀剣乱舞", ["ゲーム", "ソシャゲ"]));
-wordlist.push(new WordWolf("艦コレ", ["ゲーム", "ソシャゲ"]));
-wordlist.push(new WordWolf("グラブル", ["ゲーム", "ソシャゲ", "サイゲームス"]));
-wordlist.push(new WordWolf("FGO", ["ゲーム", "ソシャゲ"]));
-wordlist.push(new WordWolf("パズドラ", ["ゲーム", "ソシャゲ"]));
+wordlist.push(new WordWolf("刀剣乱舞", ["ソシャゲ"]));
+wordlist.push(new WordWolf("艦コレ", ["ソシャゲ"]));
+wordlist.push(new WordWolf("グラブル", ["ソシャゲ", "サイゲームス"]));
+wordlist.push(new WordWolf("FGO", ["ソシャゲ"]));
+wordlist.push(new WordWolf("パズドラ", ["ソシャゲ"]));
 wordlist.push(
   new WordWolf("ツイステットワンダーランド", [
     "ゲーム",
@@ -179,34 +183,28 @@ wordlist.push(
     "ディズニー",
   ])
 );
-wordlist.push(new WordWolf("ツムツム", ["ゲーム", "ソシャゲ", "ディズニー"]));
+wordlist.push(new WordWolf("ツムツム", ["ソシャゲ", "ディズニー"]));
 
 wordlist.push(new WordWolf("美女と野獣", ["ディズニー"]));
 wordlist.push(new WordWolf("シンデレラ", ["ディズニー"]));
 wordlist.push(new WordWolf("アラジン", ["ディズニー"]));
 
+wordlist.push(new WordWolf("シャドウバース", ["ソシャゲ", "サイゲームス"]));
+wordlist.push(new WordWolf("神撃のバハムート", ["ソシャゲ", "サイゲームス"]));
+wordlist.push(new WordWolf("ワールドフリッパー", ["ソシャゲ", "サイゲームス"]));
+wordlist.push(new WordWolf("プリンセスコネクト", ["ソシャゲ", "サイゲームス"]));
+wordlist.push(new WordWolf("ツムツム", ["ソシャゲ", "ディズニー"]));
 wordlist.push(
-  new WordWolf("シャドウバース", ["ゲーム", "ソシャゲ", "サイゲームス"])
+  new WordWolf("ドラゴンクエストシリーズ", ["スクエアエニックス", "RPG"])
 );
 wordlist.push(
-  new WordWolf("神撃のバハムート", ["ゲーム", "ソシャゲ", "サイゲームス"])
+  new WordWolf("ファイナルファンタジーシリーズ", ["スクエアエニックス", "RPG"])
 );
 wordlist.push(
-  new WordWolf("ワールドフリッパー", ["ゲーム", "ソシャゲ", "サイゲームス"])
+  new WordWolf("キングダムハーツシリーズ", ["スクエアエニックス", "RPG"])
 );
-wordlist.push(
-  new WordWolf("プリンセスコネクト", ["ゲーム", "ソシャゲ", "サイゲームス"])
-);
-wordlist.push(new WordWolf("ツムツム", ["ゲーム", "ソシャゲ", "ディズニー"]));
-wordlist.push(
-  new WordWolf("ドラゴンクエストシリーズ", ["ゲーム", "スクエアエニックス"])
-);
-wordlist.push(
-  new WordWolf("ファイナルファンタジーシリーズ", [
-    "ゲーム",
-    "スクエアエニックス",
-  ])
-);
+wordlist.push(new WordWolf("ポケットモンスター", ["RPG"]));
+
 wordlist.push(new WordWolf("烏龍茶", ["飲み物", "お茶"]));
 wordlist.push(new WordWolf("緑茶", ["飲み物", "お茶"]));
 wordlist.push(new WordWolf("ほうじ茶", ["飲み物", "お茶"]));

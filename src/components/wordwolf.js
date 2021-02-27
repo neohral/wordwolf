@@ -136,7 +136,7 @@ class WordWolf extends Component {
     }).map((e) => (
       <div>
         <span>
-          [{e.name}]({e.votes}票)は[{e.iswolf}]でお題は[{e.word}
+          [{e.name}]({e.votes}票)は[{e.iswolf}]でした！お題：[{e.word}
           ]です。
         </span>
         <p />

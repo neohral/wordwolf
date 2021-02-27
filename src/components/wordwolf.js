@@ -166,7 +166,7 @@ class WordWolf extends Component {
     if (!this.state.isGaming) {
       startbtn = (
         <button className="btn" onClick={(e) => this.wolfstart()}>
-          大神みおーん
+          ワードウルフスタート
         </button>
       );
     } else {

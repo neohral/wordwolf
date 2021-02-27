@@ -46,10 +46,16 @@ class Vote extends Component {
     const message = Object.values(this.props.userlist).map((e) => (
       <option value={e.id}>{e.name}</option>
     ));
-    const result = Object.values(this.state.voteResult).map((e) => (
+    const result = Object.values(this.state.voteResult).sort(function(a, b) {
+      if (a.votes < b.votes) {
+        return 1;
+      } else {
+        return -1;
+      }
+    }).map((e) => (
       <div>
         <span>
-          {e.name}({e.votes}票)→{e.votestatus}
+          {e.name}→{e.votestatus}
         </span>
         <p />
       </div>

@@ -14,6 +14,9 @@ class WordWolf extends Component {
       isTimer: false,
       sec: 60 * 5,
       isGaming: false,
+      voteResult:{},
+      isVoted:false,
+      winnerIsWolf:null
     };
     this.bindtimerend = this.timerend.bind(this);
   }
@@ -28,11 +31,25 @@ class WordWolf extends Component {
       this.setState({
         logs: [{ message: "----------------" }],
         isGaming: true,
+        isVoted: false,
+        winnerIsWolf: null
       });
+    });
+    socket.on("voteEnd", (obj) => {
+      console.log("vote")
+      this.setState({
+        isVoted:true
+      })
+      Object.values(obj).map((e) => {
+        if (!this.state.wolfstat.hasOwnProperty(e.id)) {
+          this.state.wolfstat[e.id] = { name: "", iswolf: "", word: "???",votes:obj[e.id].votes };
+        }
+      }
+      )
     });
     socket.on("worldwolf_message", (obj) => {
       if (!this.state.wolfstat.hasOwnProperty(obj.id)) {
-        this.state.wolfstat[obj.id] = { name: "", iswolf: "", word: "???" };
+        this.state.wolfstat[obj.id] = { name: "", iswolf: "", word: "???",votes:0 };
       }
       this.state.wolfstat[obj.id].name = obj.name;
       if (obj.hasOwnProperty("iswolf")) {
@@ -46,6 +63,24 @@ class WordWolf extends Component {
       const logs2 = this.state.logs;
       logs2.push(obj);
       this.setState({ logs: logs2 });
+      if(this.state.isVoted){
+        this.setState({ winnerIsWolf: true });
+        let maxVote = 0;
+        Object.values(this.state.wolfstat).sort(function(a, b) {
+          if (a.votes < b.votes) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }).map((e) => {
+          if(maxVote<=e.votes){
+            maxVote = e.votes;
+            if(e.iswolf=="ウルフ"){
+              this.setState({ winnerIsWolf: false });
+            }
+          }
+        })
+      }
     });
     socket.on("starttimer", (obj) => {
       this.setState({ isTimer: true });
@@ -84,10 +119,24 @@ class WordWolf extends Component {
   }
   render() {
     const theme = this.state.message;
-    const message = Object.values(this.state.wolfstat).map((e) => (
+    let winner = "";
+    if(this.state.winnerIsWolf!=null){
+      if(this.state.winnerIsWolf){
+        winner = <div><font size="5">ウルフ（少数派）の勝利</font></div>
+      }else{
+        winner = <div><font size="5">市民（多数派）の勝利</font></div>
+      }
+    }
+    const message = Object.values(this.state.wolfstat).sort(function(a, b) {
+      if (a.votes < b.votes) {
+        return 1;
+      } else {
+        return -1;
+      }
+    }).map((e) => (
       <div>
         <span>
-          [{e.name}]は[{e.iswolf}]でお題は[{e.word}
+          [{e.name}]({e.votes}票)は[{e.iswolf}]でお題は[{e.word}
           ]です。
         </span>
         <p />
@@ -125,6 +174,7 @@ class WordWolf extends Component {
     }
     return (
       <div id="Form">
+        {winner}
         <div className="box2">
           ゲーム設定:
           <br />

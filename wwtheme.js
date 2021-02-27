@@ -231,5 +231,13 @@ wordlist.push(new WordWolf("LINE", ["SNS"]));
 wordlist.push(new WordWolf("FaceBook", ["SNS"]));
 wordlist.push(new WordWolf("Instagram", ["SNS"]));
 wordlist.push(new WordWolf("mixi", ["SNS"]));
+
+wordlist.push(new WordWolf("ラーメン", ["麺類"]));
+wordlist.push(new WordWolf("そば", ["麺類"]));
+wordlist.push(new WordWolf("うどん", ["麺類"]));
+wordlist.push(new WordWolf("そうめん", ["麺類"]));
+wordlist.push(new WordWolf("スパゲッティ", ["麺類"]));
+wordlist.push(new WordWolf("やきそば", ["麺類"]));
+
 module.exports.wordlist = wordlist;
 module.exports.getWord = getWord;
